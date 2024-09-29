@@ -1,0 +1,117 @@
+package pct;
+
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Jogo implements ActionListener {
+    private JFrame novaJanela;
+    private JLabel labelPalavra;
+    private String palavra;
+    private Set<Character> letrasCorretas;
+    private Set<Character> letrasErradas;
+    private int tentativasRestantes;
+
+    // Construtor para inicializar o jogo
+    public Jogo() {
+        // Lista de palavras para o jogo
+        String[] palavras = {"python", "jogo", "inteligencia", "artificial", "faculdade", "anime", "estagio", "personagem", "computador", "algoritmo"};
+
+        // Escolher uma palavra aleatoriamente
+        palavra = palavras[(int) (Math.random() * palavras.length)];
+        letrasCorretas = new HashSet<>();
+        letrasErradas = new HashSet<>();
+        tentativasRestantes = 6;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Criar a nova janela
+        novaJanela = new JFrame("Jogo da Forca");
+        novaJanela.setSize(400, 300);
+        novaJanela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        novaJanela.setLayout(null);
+
+        // Label para exibir o estado da palavra
+        labelPalavra = new JLabel(mostrarPalavra());
+        labelPalavra.setBounds(50, 50, 300, 50);
+        novaJanela.add(labelPalavra);
+
+        // Botão para adivinhar letra
+        JButton botaoAdivinhar = new JButton("Adivinhar");
+        botaoAdivinhar.setBounds(150, 150, 100, 30);
+        novaJanela.add(botaoAdivinhar);
+
+        // Campo de texto para digitar letra
+        JTextField campoLetra = new JTextField();
+        campoLetra.setBounds(150, 100, 100, 30);
+        novaJanela.add(campoLetra);
+
+        // Ação para o botão de adivinhar
+        botaoAdivinhar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                String input = campoLetra.getText().toLowerCase();
+                if (input.length() != 1) {
+                    JOptionPane.showMessageDialog(novaJanela, "Digite apenas uma letra!");
+                    return;
+                }
+
+                char letra = input.charAt(0);
+
+                if (letrasCorretas.contains(letra) || letrasErradas.contains(letra)) {
+                    JOptionPane.showMessageDialog(novaJanela, "Você já adivinhou essa letra!");
+                    return;
+                }
+
+                if (palavra.indexOf(letra) >= 0) {
+                    letrasCorretas.add(letra);
+                } else {
+                    letrasErradas.add(letra);
+                    tentativasRestantes--;
+                }
+
+                // Atualizar a palavra e verificar o fim do jogo
+                labelPalavra.setText(mostrarPalavra());
+                verificarFimDeJogo();
+            }
+        });
+
+        novaJanela.setVisible(true);
+    }
+
+    // Função para mostrar o estado atual da palavra
+    private String mostrarPalavra() {
+        StringBuilder estadoPalavra = new StringBuilder();
+        for (char letra : palavra.toCharArray()) {
+            if (letrasCorretas.contains(letra)) {
+                estadoPalavra.append(letra).append(" ");
+            } else {
+                estadoPalavra.append("_ ");
+            }
+        }
+        return estadoPalavra.toString();
+    }
+
+    // Função para verificar o fim do jogo
+    private void verificarFimDeJogo() {
+        if (tentativasRestantes == 0) {
+            JOptionPane.showMessageDialog(novaJanela, "Você perdeu! A palavra era: " + palavra);
+            novaJanela.dispose();
+        } else if (verificarVitoria()) {
+            JOptionPane.showMessageDialog(novaJanela, "Parabéns! Você venceu!");
+            novaJanela.dispose();
+        }
+    }
+
+    // Função para verificar se o jogador venceu
+    private boolean verificarVitoria() {
+        for (char letra : palavra.toCharArray()) {
+            if (!letrasCorretas.contains(letra)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
