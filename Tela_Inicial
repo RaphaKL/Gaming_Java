@@ -1,0 +1,46 @@
+package pct;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Tela_Inicial extends JFrame {
+    public Tela_Inicial() {
+        setTitle("Jogo da Forca");
+        setSize(400, 400);
+        setLocation(300, 100);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setupComponents();
+        setVisible(true);
+    }
+
+    private void setupComponents() {
+        setLayout(null);
+        JLabel Titulo = new JLabel("Bem-vindo ao Jogo da Forca");
+        JButton btIniciar = new JButton("Iniciar");
+        JButton btSair = new JButton("Sair");
+
+        Titulo.setSize(Titulo.getPreferredSize());
+        btIniciar.setSize(btIniciar.getPreferredSize());
+        btSair.setSize(btSair.getPreferredSize());
+
+        Titulo.setLocation(110, 20);
+        btIniciar.setLocation(230, 300);
+        btSair.setLocation(120, 300);  // Ajustei a posição do botão "Sair"
+
+        add(Titulo);
+        add(btIniciar);
+        add(btSair);
+
+        // Ação do botão "Sair"
+        btSair.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Fecha a janela
+                dispose();  // Fecha a janela atual
+            }
+        });
+
+        // Ação do botão "Iniciar" (a classe "Jogo" deve implementar ActionListener)
+        btIniciar.addActionListener(new Jogo());
+    }
+}
