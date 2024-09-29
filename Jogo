@@ -8,6 +8,7 @@ import java.util.Set;
 public class Jogo implements ActionListener {
     private JFrame novaJanela;
     private JLabel labelPalavra;
+    private JLabel labelTentativas; // Label para tentativas restantes
     private String palavra;
     private Set<Character> letrasCorretas;
     private Set<Character> letrasErradas;
@@ -15,10 +16,7 @@ public class Jogo implements ActionListener {
 
     // Construtor para inicializar o jogo
     public Jogo() {
-        // Lista de palavras para o jogo
         String[] palavras = {"python", "jogo", "inteligencia", "artificial", "faculdade", "anime", "estagio", "personagem", "computador", "algoritmo"};
-
-        // Escolher uma palavra aleatoriamente
         palavra = palavras[(int) (Math.random() * palavras.length)];
         letrasCorretas = new HashSet<>();
         letrasErradas = new HashSet<>();
@@ -27,28 +25,28 @@ public class Jogo implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Criar a nova janela
         novaJanela = new JFrame("Jogo da Forca");
         novaJanela.setSize(400, 300);
         novaJanela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         novaJanela.setLayout(null);
 
-        // Label para exibir o estado da palavra
         labelPalavra = new JLabel(mostrarPalavra());
         labelPalavra.setBounds(50, 50, 300, 50);
         novaJanela.add(labelPalavra);
 
-        // Botão para adivinhar letra
+        // Novo label para mostrar o número de tentativas restantes
+        labelTentativas = new JLabel("Tentativas restantes: " + tentativasRestantes);
+        labelTentativas.setBounds(50, 200, 200, 30);
+        novaJanela.add(labelTentativas);
+
         JButton botaoAdivinhar = new JButton("Adivinhar");
         botaoAdivinhar.setBounds(150, 150, 100, 30);
         novaJanela.add(botaoAdivinhar);
 
-        // Campo de texto para digitar letra
         JTextField campoLetra = new JTextField();
         campoLetra.setBounds(150, 100, 100, 30);
         novaJanela.add(campoLetra);
 
-        // Ação para o botão de adivinhar
         botaoAdivinhar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -70,9 +68,9 @@ public class Jogo implements ActionListener {
                 } else {
                     letrasErradas.add(letra);
                     tentativasRestantes--;
+                    labelTentativas.setText("Tentativas restantes: " + tentativasRestantes); // Atualiza o número de tentativas restantes
                 }
 
-                // Atualizar a palavra e verificar o fim do jogo
                 labelPalavra.setText(mostrarPalavra());
                 verificarFimDeJogo();
             }
