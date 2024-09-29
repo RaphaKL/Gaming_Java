@@ -1,0 +1,11 @@
+
+
+package pct;
+
+public class Iniciador_game {
+
+    public static void main(String[] args) {
+        Tela_Inicial projeto=new Tela_Inicial();
+        Jogo jogo=new Jogo();
+    }
+}
